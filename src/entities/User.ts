@@ -6,13 +6,13 @@ export class User
 {
 
     @PrimaryColumn()
-    email:String
+    email:string
 
     @Column({unique:true,nullable:false})
     username:string
 
     @Column()
-    password:string
+    password?:string
 
     @Column({nullable:true})
     bio?:string
