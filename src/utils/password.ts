@@ -10,4 +10,12 @@ export function hashPassword(password:string):Promise<string>{
         })
     })
     }
+export function comparePasssword(password:string,hash:string):Promise<boolean>{
+    return new Promise<boolean>((resolve,reject)=>{
+        bcrypt.compare(password,hash,(err:any,result:boolean|undefined)=>{
+            if(err) reject(err)
+                   resolve(result as boolean)
+        })
+    })
+}
 

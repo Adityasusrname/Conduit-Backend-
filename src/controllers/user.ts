@@ -1,9 +1,15 @@
 import { getRepository } from "typeorm"
 import { User } from "../entities/User"
-import { hashPassword } from "../utils/password"
+import { comparePasssword, hashPassword } from "../utils/password"
+import { sanitizePassword } from "../utils/sequrity"
 
 interface userRegistrationData{
     username:string,
+    email:string,
+    password:string
+}
+
+interface userLoginData{
     email:string,
     password:string
 }
@@ -40,4 +46,28 @@ export async function createUser(data:userRegistrationData):Promise<User>{
         
 
 
+}
+
+export async function loginUser(data:userLoginData):Promise<User> {
+      
+
+    //Checking for valid data
+    if(!data.email) throw new Error('Email not provided!')
+    if(!data.password) throw new Error('Password not provided!')
+    
+    //Checking with db
+    const repo = await getRepository(User)
+    const user = await repo.findOne({
+        where:{
+            email:data.email
+        }
+    })
+    //No user found
+    if(!user) throw new Error('User not found!')
+    //User is found
+    const result = await comparePasssword(data.password,(user.password as string))
+    if(result) return user
+    else throw Error('Password did not match!')
+
+    
 }
