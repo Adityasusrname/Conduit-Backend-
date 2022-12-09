@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 
 @Entity('articles')
@@ -16,10 +16,10 @@ export class Articles{
     @Column({nullable:false})
     body:string
 
-    @Column()
+    @CreateDateColumn()
     createdAt:Date
 
-    @Column()
+    @UpdateDateColumn()
     updatedAt:Date
 
     @Column({default:false})

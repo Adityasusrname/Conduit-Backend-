@@ -1,6 +1,7 @@
 import { createConnection } from "typeorm"
 import { Articles } from "./entities/Article"
 import { User } from "./entities/User"
+import { articlesRoute } from "./routes/articles"
 import { userRoute } from "./routes/user"
 import { usersRoute } from "./routes/users"
 
@@ -12,6 +13,7 @@ app.use(express.json())
 
 app.use('/api/users',usersRoute)
 app.use('/api/user',userRoute)
+app.use('/api/articles',articlesRoute)
 
 async function start(){
 
