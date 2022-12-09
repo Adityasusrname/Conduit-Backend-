@@ -71,3 +71,12 @@ export async function loginUser(data:userLoginData):Promise<User> {
 
     
 }
+
+export async function getUser(email:string):Promise<User>{
+    const repo = await getRepository(User)
+    const user = await repo.findOne({where:{
+        email:email
+    }})
+    if(!user) throw new Error('User not found!')
+    return user
+}
