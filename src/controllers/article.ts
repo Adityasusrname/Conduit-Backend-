@@ -70,3 +70,23 @@ export async function updateArticle(data:articleUpdationData):Promise<Articles>{
             return newArticle
 
 }
+
+export async function deleteArticle(slug:string):Promise<Boolean>{
+
+    const repo = await getRepository(Articles)
+    const article = await repo.findOne({
+        where:{
+            slug:slug
+        }
+    })
+
+    if(!article) throw new Error('Article not found!')
+
+    const result = await repo.remove(article)
+
+    if(result)
+    return true
+    else
+    return false
+  
+}
