@@ -13,6 +13,12 @@ interface userLoginData{
     email:string,
     password:string
 }
+interface userUpdateData{
+    email:string
+    password?:string
+    image?:string
+    bio?:string
+}
 
 
 export async function createUser(data:userRegistrationData):Promise<User>{
@@ -79,4 +85,29 @@ export async function getUser(email:string):Promise<User>{
     }})
     if(!user) throw new Error('User not found!')
     return user
+}
+
+
+export async function updateUser(data:userUpdateData):Promise<User>{
+     
+     const repo = await getRepository(User)
+     const user = await repo.findOne({where:{
+        email:data.email
+     }})
+
+     if(!user) throw new Error('User not found!')
+    
+     if(data.password)
+     user.password = await hashPassword(data.password)
+     if(data.bio)
+     user.bio = data.bio
+     if(data.image)
+     user.image = data.image
+
+     const updatedUser = await repo.save(user)
+
+     return updatedUser
+
+
+
 }
