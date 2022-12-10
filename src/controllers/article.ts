@@ -11,6 +11,13 @@ interface articleCreationData{
     author:User
 }
 
+interface articleUpdationData{
+    slug:string
+    title?:string
+    description?:string
+    body?:string
+}
+
 export async function createArticle(data:articleCreationData):Promise<Articles>{
 
            //Data validation
@@ -37,5 +44,29 @@ export async function createArticle(data:articleCreationData):Promise<Articles>{
            return newArticle
 
            
+
+}
+
+export async function updateArticle(data:articleUpdationData):Promise<Articles>{
+            
+            const repo = await getRepository(Articles)
+            const article = await repo.findOne({
+                where:{
+                    slug:data.slug
+                }
+            })
+            if (!article) throw new Error('No article found!')
+
+            if(data.title){
+                article.title = data.title
+                article.slug = slugify(data.title)
+            } 
+            if(data.description)
+            article.description = data.description
+            if(data.body) 
+            article.body = data.body
+
+            const newArticle = await repo.save(article)
+            return newArticle
 
 }
