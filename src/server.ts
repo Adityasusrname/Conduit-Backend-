@@ -1,7 +1,9 @@
 import { createConnection } from "typeorm"
 import { Articles } from "./entities/Article"
+import { Following } from "./entities/Following"
 import { User } from "./entities/User"
 import { articlesRoute } from "./routes/articles"
+import { profilesRouter } from "./routes/profiles"
 import { userRoute } from "./routes/user"
 import { usersRoute } from "./routes/users"
 
@@ -14,6 +16,7 @@ app.use(express.json())
 app.use('/api/users',usersRoute)
 app.use('/api/user',userRoute)
 app.use('/api/articles',articlesRoute)
+app.use('/api/profiles',profilesRouter)
 
 async function start(){
 
@@ -24,7 +27,7 @@ async function start(){
             username:process.env.USERNAME?.toString(),
             password:process.env.PASSWORD?.toString(),
             database:process.env.DATABASE?.toString(),
-            entities:[Articles,User],
+            entities:[Articles,User,Following],
             synchronize: true,
             dropSchema:true,
             logging:true,

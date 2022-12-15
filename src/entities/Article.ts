@@ -22,12 +22,6 @@ export class Articles{
     @UpdateDateColumn()
     updatedAt:Date
 
-    @Column({default:false})
-    favorited:boolean
-
-    @Column({default:0})
-    favouritesCount:Number
-
     @ManyToOne(()=>User)
     author:User
 }
