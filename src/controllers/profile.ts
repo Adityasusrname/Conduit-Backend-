@@ -50,7 +50,31 @@ export async function follow(data:followDataRequest):Promise<Profile>{
     
     console.log(data)
 
+    const existingFollowingData = await repoFollowing.findOne({where:{
+        followee:followeeUser,
+        follower:followerUser
+    }})
     
+    if(existingFollowingData)
+    {
+
+        console.log(existingFollowingData)
+
+        await repoFollowing.delete(existingFollowingData)
+     
+
+        const profile:Profile={
+            username:followeeUser.username,
+            bio:followeeUser.bio,
+            image:followeeUser.image,
+            following:false
+        }
+
+        return profile
+
+    }
+    else{
+
     const followingData = await repoFollowing.save(followData)
 
     const profile:Profile = {
@@ -62,6 +86,10 @@ export async function follow(data:followDataRequest):Promise<Profile>{
     }
 
     return profile
+
+    }
+    
+    
 
 
 

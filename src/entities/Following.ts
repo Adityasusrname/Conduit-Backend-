@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 
 @Entity('followers')
@@ -7,11 +7,9 @@ export class Following{
     @PrimaryGeneratedColumn('uuid')
     id:string
 
-    @OneToOne(()=>User)
-    @JoinColumn()
+    @ManyToOne(()=>User)
     followee:User
 
-    @OneToOne(()=>User)
-    @JoinColumn()
+    @ManyToOne(()=>User)
     follower:User
 }
