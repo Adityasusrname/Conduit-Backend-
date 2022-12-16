@@ -1,4 +1,3 @@
-import { profile } from "console";
 import { getRepository } from "typeorm";
 import { Following } from "../entities/Following";
 import { User } from "../entities/User";
@@ -19,6 +18,11 @@ interface Profile{
     bio:string|undefined
     image:string|undefined
     following:boolean
+}
+
+interface getProfileRequest{
+    username:string
+    follower:string
 }
 
 export async function follow(data:followDataRequest):Promise<Profile>{
@@ -91,6 +95,59 @@ export async function follow(data:followDataRequest):Promise<Profile>{
     
     
 
+
+
+}
+
+export async function getProfile(data:getProfileRequest):Promise<Profile>{
+
+       const repoUsers = await getRepository(User)
+       const repoFollowing = await getRepository(Following)
+
+       const user = await repoUsers.findOne({
+        where:{
+            username:data.username
+        }
+       })
+
+       const follower = await repoUsers.findOne({where:{
+        email:data.follower
+       }})
+       
+       if(!user)
+       throw new Error('Profile with that username not found!')
+
+       if(!follower)
+       throw new Error('Current user not found!')
+
+       
+
+       const isFollowing = await repoFollowing.findOne({
+        where:{
+
+            followee:user,
+            follower:follower
+            
+        }
+       })
+       
+      
+       
+       let following = false
+
+       if(isFollowing)
+       following=true
+       
+       
+       const profile:Profile={
+        username:user.username,
+        bio:user.bio,
+        image:user.image,
+        following:following
+
+       }
+
+       return profile
 
 
 }
