@@ -2,6 +2,7 @@ import { getRepository } from "typeorm"
 import {Articles} from "../entities/Article"
 import { User } from "../entities/User"
 import { slugify } from "../utils/slug"
+import {Comment} from "../entities/Comment"
 
 interface articleCreationData{
     title:string
@@ -18,6 +19,16 @@ interface articleUpdationData{
     body?:string
 }
 
+interface commentRequest{
+    authorEmail:string,
+    slug:string,
+    body:string
+}
+interface commentCreationData{
+    article:Articles
+    body:string
+    author:User
+}
 export async function createArticle(data:articleCreationData):Promise<Articles>{
 
            //Data validation
@@ -89,4 +100,36 @@ export async function deleteArticle(slug:string):Promise<Boolean>{
     else
     return false
   
+}
+
+export async  function commentOnArticle(data:commentRequest):Promise<Partial<Comment>>{
+
+    const repoComments = await getRepository(Comment)
+    const repoUsers = await getRepository(User)
+    const repoArticles = await getRepository(Articles)
+
+    const author=await repoUsers.findOne({where:{email:data.authorEmail}})
+    const article = await repoArticles.findOne({where:{
+        slug:data.slug
+    }})
+
+    if(!author)
+    throw new Error('Current user not found!')
+    if(!article)
+    throw new Error('Article not found!')
+
+    const commentToSave:commentCreationData = {
+
+        article:article,
+        body:data.body,
+        author:author
+
+    }
+
+    console.log(commentToSave)
+
+    const comment = await repoComments.save(commentToSave)
+
+    return comment
+
 }

@@ -1,6 +1,8 @@
 import {Router} from 'express'
-import { createArticle, deleteArticle, updateArticle } from '../controllers/article'
+import { commentOnArticle, createArticle, deleteArticle, updateArticle } from '../controllers/article'
+import { User } from '../entities/User'
 import { authToken } from '../middleware/Auth'
+import { sanitizePassword } from '../utils/sequrity'
 
 const route = Router()
 
@@ -45,6 +47,27 @@ route.delete('/:slug',authToken,async (req,res)=>{
         })
     }
     
+})
+
+route.post('/:slug/comments',authToken,async (req,res)=>{
+
+    try{
+        if(!(req as any).user) throw new Error('User not found!')
+        const slug = req.params['slug']
+        req.body.authorEmail=(req as any).user.email
+        req.body.slug=slug
+        req.body.body = req.body.comment.body
+        const comment = await commentOnArticle(req.body)
+        delete comment.article
+        sanitizePassword(comment.author as User)
+        res.status(200).json({comment})
+    }
+    catch(e){
+        res.status(400).json({
+            "errors":[(e as Error).message]
+        })
+    }
+
 })
 
 export const articlesRoute = route
