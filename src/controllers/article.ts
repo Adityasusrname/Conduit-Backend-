@@ -169,6 +169,8 @@ export async function favoriteArticle(data:favouriteRequest):Promise<Article> {
     }})
     if(!user) throw new Error('No user found!')
 
+    sanitizePassword(user)
+
     const favouriteData:favouriteData = {
         article:article,
         by:user
