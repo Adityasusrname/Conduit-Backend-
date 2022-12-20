@@ -34,6 +34,7 @@ This project is an attempt to get myself started with writing backends for big p
 ### tags
 - [ ] GET /api/tags
 
+### HTTP Codes and Errors
 
 - [ ] Proper HTTP codes 
 - [ ] Proper error messages
