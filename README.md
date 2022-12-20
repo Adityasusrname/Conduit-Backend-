@@ -20,20 +20,20 @@ This project is an attempt to get myself started with writing backends for big p
 
 
 ### articles
-- []  GET /api/articles
-- []  GET /api/articles/feed
+- [ ]  GET /api/articles
+- [ ]  GET /api/articles/feed
 - [X] GET /api/articles/:slug
 - [X] POST /api/articles
 - [X] PATCH /api/articles/:slug
 - [X] DELETE /api/articles/:slug
 - [X] POST /api/articles/:slug/comments
-- []  GET /api/articles/:slug/comments
-- []  DELETE /api/articles/:slug/comments/:id
+- [ ]  GET /api/articles/:slug/comments
+- [ ]  DELETE /api/articles/:slug/comments/:id
 - [X] POST /api/articles/:slug/favorite
 
 ### tags
-- [] GET /api/tags
+- [ ] GET /api/tags
 
 
-- [] Proper HTTP codes 
-- [] Proper error messages
+- [ ] Proper HTTP codes 
+- [ ] Proper error messages
