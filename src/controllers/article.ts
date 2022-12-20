@@ -1,5 +1,5 @@
 import { getRepository } from "typeorm"
-import {Articles} from "../entities/Article"
+import {Article} from "../entities/Article"
 import { User } from "../entities/User"
 import { slugify } from "../utils/slug"
 import {Comment} from "../entities/Comment"
@@ -27,7 +27,7 @@ interface commentRequest{
     body:string
 }
 interface commentCreationData{
-    article:Articles
+    article:Article
     body:string
     author:User
 }
@@ -36,10 +36,10 @@ interface favouriteRequest{
     email:string
 }
 interface favouriteData{
-    article:Articles
+    article:Article
     by:User
 }
-export async function createArticle(data:articleCreationData):Promise<Articles>{
+export async function createArticle(data:articleCreationData):Promise<Article>{
 
            //Data validation
            if(!data.title) throw new Error('Title not provided!')
@@ -50,7 +50,7 @@ export async function createArticle(data:articleCreationData):Promise<Articles>{
            const slug = slugify(data.title)
            
            //Checking if article already exists
-           const repo=await getRepository(Articles)
+           const repo=await getRepository(Article)
            const repoUsers=await getRepository(User)
            const user = await repoUsers.findOne({where:{
             email:data.author.email
@@ -75,9 +75,9 @@ export async function createArticle(data:articleCreationData):Promise<Articles>{
 
 }
 
-export async function updateArticle(data:articleUpdationData):Promise<Articles>{    
+export async function updateArticle(data:articleUpdationData):Promise<Article>{    
             
-            const repo = await getRepository(Articles)
+            const repo = await getRepository(Article)
             const article = await repo.findOne({
                 where:{
                     slug:data.slug
@@ -101,7 +101,7 @@ export async function updateArticle(data:articleUpdationData):Promise<Articles>{
 
 export async function deleteArticle(slug:string):Promise<Boolean>{
 
-    const repo = await getRepository(Articles)
+    const repo = await getRepository(Article)
     const article = await repo.findOne({
         where:{
             slug:slug
@@ -123,7 +123,7 @@ export async  function commentOnArticle(data:commentRequest):Promise<Partial<Com
 
     const repoComments = await getRepository(Comment)
     const repoUsers = await getRepository(User)
-    const repoArticles = await getRepository(Articles)
+    const repoArticles = await getRepository(Article)
 
     const author=await repoUsers.findOne({where:{email:data.authorEmail}})
     const article = await repoArticles.findOne({where:{
@@ -151,9 +151,9 @@ export async  function commentOnArticle(data:commentRequest):Promise<Partial<Com
 
 }
 
-export async function favoriteArticle(data:favouriteRequest):Promise<Articles> {
+export async function favoriteArticle(data:favouriteRequest):Promise<Article> {
 
-    const repoArticles = await getRepository(Articles)
+    const repoArticles = await getRepository(Article)
     const repoUsers = await getRepository(User)
     const repoFavourite = await getRepository(Favourite)
 

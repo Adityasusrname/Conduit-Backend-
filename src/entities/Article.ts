@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn,
 import { User } from "./User";
 
 @Entity('articles')
-export class Articles{
+export class Article{
 
     @PrimaryColumn()
     slug:string
