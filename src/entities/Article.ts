@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 
 @Entity('articles')
@@ -23,7 +23,10 @@ export class Articles{
     updatedAt:Date
 
     @ManyToOne(()=>User)
+    @JoinColumn({name:'author'})
     author:User
+
+    favorited?:boolean
 }
 
 

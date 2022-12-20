@@ -3,6 +3,8 @@ import {Articles} from "../entities/Article"
 import { User } from "../entities/User"
 import { slugify } from "../utils/slug"
 import {Comment} from "../entities/Comment"
+import { Favourite } from "../entities/Favorite"
+import { sanitizePassword } from "../utils/sequrity"
 
 interface articleCreationData{
     title:string
@@ -29,6 +31,14 @@ interface commentCreationData{
     body:string
     author:User
 }
+interface favouriteRequest{
+    slug:string
+    email:string
+}
+interface favouriteData{
+    article:Articles
+    by:User
+}
 export async function createArticle(data:articleCreationData):Promise<Articles>{
 
            //Data validation
@@ -41,6 +51,11 @@ export async function createArticle(data:articleCreationData):Promise<Articles>{
            
            //Checking if article already exists
            const repo=await getRepository(Articles)
+           const repoUsers=await getRepository(User)
+           const user = await repoUsers.findOne({where:{
+            email:data.author.email
+           }})
+           if(!user) throw new Error('Author not found!')
            const article = await repo.findOne({
             where:{
                 slug:slug
@@ -49,6 +64,8 @@ export async function createArticle(data:articleCreationData):Promise<Articles>{
            if(article) throw new Error('Article already exists!')
 
            data.slug = slug
+           sanitizePassword(user)
+           data.author=user
            
            const newArticle =await repo.save(data)
 
@@ -58,7 +75,7 @@ export async function createArticle(data:articleCreationData):Promise<Articles>{
 
 }
 
-export async function updateArticle(data:articleUpdationData):Promise<Articles>{
+export async function updateArticle(data:articleUpdationData):Promise<Articles>{    
             
             const repo = await getRepository(Articles)
             const article = await repo.findOne({
@@ -131,5 +148,63 @@ export async  function commentOnArticle(data:commentRequest):Promise<Partial<Com
     const comment = await repoComments.save(commentToSave)
 
     return comment
+
+}
+
+export async function favoriteArticle(data:favouriteRequest):Promise<Articles> {
+
+    const repoArticles = await getRepository(Articles)
+    const repoUsers = await getRepository(User)
+    const repoFavourite = await getRepository(Favourite)
+
+    const article = await repoArticles.findOne({where:{
+        slug:data.slug
+    },relations:['author']}  )
+    if(!article) throw new Error('No article found!')
+
+
+
+    const user = await repoUsers.findOne({where:{
+        email:data.email
+    }})
+    if(!user) throw new Error('No user found!')
+
+    const favouriteData:favouriteData = {
+        article:article,
+        by:user
+    } 
+    
+    console.log(favouriteData.article)
+    console.log(favouriteData.by)
+
+    const slug = article.slug
+    const email = user.email
+
+
+    const existing = await repoFavourite.createQueryBuilder('favorites').leftJoinAndSelect('favorites.article','articles').leftJoinAndSelect('favorites.by','users').where('articles.slug=:slug',{slug}).where('users.email=:email',{email}).getOne()
+
+    console.log(existing)
+
+    if(existing)
+    {
+
+        const favouriteDataResponse = await repoFavourite.delete(favouriteData)
+        article.favorited=false
+       
+    
+    }
+    
+    else{
+
+        const favouriteDataResponse = await repoFavourite.save(favouriteData)
+        article.favorited=true
+        
+    }
+
+     return article
+
+    
+
+
 
 }

@@ -1,5 +1,6 @@
+import { errorMonitor } from 'events'
 import {Router} from 'express'
-import { commentOnArticle, createArticle, deleteArticle, updateArticle } from '../controllers/article'
+import { commentOnArticle, createArticle, deleteArticle, favoriteArticle, updateArticle } from '../controllers/article'
 import { User } from '../entities/User'
 import { authToken } from '../middleware/Auth'
 import { sanitizePassword } from '../utils/sequrity'
@@ -66,6 +67,27 @@ route.post('/:slug/comments',authToken,async (req,res)=>{
         res.status(400).json({
             "errors":[(e as Error).message]
         })
+    }
+
+})
+
+route.post('/:slug/favorite',authToken,async (req,res)=>{
+
+    try{
+        if(!(req as any).user) throw new Error('User not found!')
+        const slug = req.params['slug']
+        if(!slug)
+        throw new Error('Slug not found!')
+        req.body.email = (req as any).user.email
+        req.body.slug = slug
+        const article = await favoriteArticle(req.body)
+        res.status(200).json({article})
+    }
+    catch(e)
+    {
+         res.status(400).json({
+            "errors":[(e as Error).message]
+         })
     }
 
 })

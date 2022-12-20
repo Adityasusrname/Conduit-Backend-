@@ -7,6 +7,7 @@ import { articlesRoute } from "./routes/articles"
 import { profilesRouter } from "./routes/profiles"
 import { userRoute } from "./routes/user"
 import { usersRoute } from "./routes/users"
+import { Favourite } from "./entities/Favorite"
 
 const express = require('express')
 require('dotenv').config()
@@ -28,7 +29,7 @@ async function start(){
             username:process.env.USERNAME?.toString(),
             password:process.env.PASSWORD?.toString(),
             database:process.env.DATABASE?.toString(),
-            entities:[Articles,User,Following,Comment],
+            entities:[Articles,User,Following,Comment,Favourite],
             synchronize: true,
             dropSchema:true,
             logging:true,
