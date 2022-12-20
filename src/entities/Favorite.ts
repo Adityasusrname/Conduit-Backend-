@@ -1,15 +1,15 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Articles } from "./Article";
+import { Article } from "./Article";
 import { User } from "./User";
 
 @Entity('favorites')
 export class Favourite{
     @PrimaryGeneratedColumn('uuid')
     id:string
-    @ManyToOne(()=>Articles)
+    @ManyToOne(()=>Article)
     @JoinColumn({name:'slug'})
-    article:Articles
+    article:Article
     @ManyToOne(()=>User)
-    @JoinColumn({name:'email'})
+    @JoinColumn({name:'by'})
     by:User
 }

@@ -1,5 +1,5 @@
 import { createConnection } from "typeorm"
-import { Articles } from "./entities/Article"
+import { Article } from "./entities/Article"
 import { Following } from "./entities/Following"
 import {Comment} from "./entities/Comment"
 import { User } from "./entities/User"
@@ -29,7 +29,7 @@ async function start(){
             username:process.env.USERNAME?.toString(),
             password:process.env.PASSWORD?.toString(),
             database:process.env.DATABASE?.toString(),
-            entities:[Articles,User,Following,Comment,Favourite],
+            entities:[Article,User,Following,Comment,Favourite],
             synchronize: true,
             dropSchema:true,
             logging:true,

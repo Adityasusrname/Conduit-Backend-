@@ -8,8 +8,10 @@ export class Following{
     id:string
 
     @ManyToOne(()=>User)
+    @JoinColumn({name:'followee'})
     followee:User
 
     @ManyToOne(()=>User)
+    @JoinColumn({name:'follower'})
     follower:User
 }

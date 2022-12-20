@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Articles } from "./Article";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Article } from "./Article";
 import { User } from "./User";
 
 
@@ -9,13 +9,15 @@ export class Comment{
     @PrimaryGeneratedColumn('uuid')
     id:string
 
-    @ManyToOne(()=>Articles)
-    article:Articles
+    @ManyToOne(()=>Article)
+    @JoinColumn({name:'article'})
+    article:Article
 
     @Column()
     body:string
 
     @ManyToOne(()=>User)
+    @JoinColumn({name:'author'})
     author:User
 
     @CreateDateColumn()
