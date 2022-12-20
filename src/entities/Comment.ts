@@ -6,8 +6,8 @@ import { User } from "./User";
 @Entity('comments')
 export class Comment{
 
-    @PrimaryGeneratedColumn('uuid')
-    id:string
+    @PrimaryGeneratedColumn()
+    id:number
 
     @ManyToOne(()=>Article)
     @JoinColumn({name:'article'})

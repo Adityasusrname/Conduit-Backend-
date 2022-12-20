@@ -4,8 +4,8 @@ import { User } from "./User";
 @Entity('followers')
 export class Following{
 
-    @PrimaryGeneratedColumn('uuid')
-    id:string
+    @PrimaryGeneratedColumn()
+    id:number
 
     @ManyToOne(()=>User)
     @JoinColumn({name:'followee'})

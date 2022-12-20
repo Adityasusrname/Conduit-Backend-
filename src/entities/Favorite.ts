@@ -4,8 +4,8 @@ import { User } from "./User";
 
 @Entity('favorites')
 export class Favourite{
-    @PrimaryGeneratedColumn('uuid')
-    id:string
+    @PrimaryGeneratedColumn()
+    id:number
     @ManyToOne(()=>Article)
     @JoinColumn({name:'slug'})
     article:Article
